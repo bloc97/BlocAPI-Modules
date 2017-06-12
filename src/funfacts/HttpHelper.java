@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package module;
+package funfacts;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import module.addon.RandomFact;
+import funfacts.addon.RandomFact;
 
 /**
  *

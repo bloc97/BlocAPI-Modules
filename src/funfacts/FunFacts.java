@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package module;
+package funfacts;
 
 import addon.Addon;
 import container.ContainerSettings;
 import container.TokenAdvancedContainer;
 import dbot.BotCommandTrigger;
 import dbot.Module;
-import module.addon.RandomFact;
+import funfacts.addon.RandomFact;
 import modules.Help;
 import sx.blah.discord.api.events.Event;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
@@ -71,19 +71,22 @@ public class FunFacts extends Module {
         return -13960233l;
     }
     
+    private final static ContainerSettings settings = ContainerSettings.buildSettings("!");
     @Override
     public ContainerSettings getContainerSettings() {
-        return ContainerSettings.buildSettings("!");
+        return settings;
     }
 
+    private final static TokenConverter converter = TokenConverter.getDefault();
     @Override
     public TokenConverter getTokenConverter() {
-        return TokenConverter.getDefault();
+        return converter;
     }
 
+    private final static BotCommandTrigger trigger = BotCommandTrigger.getDefault(settings);
     @Override
     public BotCommandTrigger getCommandTrigger() {
-        return BotCommandTrigger.getDefault(ContainerSettings.buildSettings("!"));
+        return trigger;
     }
 
     @Override

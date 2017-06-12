@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package module.addon;
+package funfacts.addon;
 
 import addon.Addon;
 import container.TokenAdvancedContainer;
@@ -11,8 +11,8 @@ import container.detector.TokenDetectorContainer;
 import container.detector.TokenStringDetector;
 import helpers.ParserUtils;
 import java.util.Date;
-import module.FunFacts.RandomInfoAddon;
-import module.HttpHelper;
+import funfacts.FunFacts.RandomInfoAddon;
+import funfacts.HttpHelper;
 import modules.help.Help;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.api.internal.json.objects.EmbedObject.EmbedFieldObject;

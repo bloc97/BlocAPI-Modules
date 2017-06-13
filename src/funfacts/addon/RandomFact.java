@@ -178,7 +178,7 @@ public class RandomFact implements Addon, RandomInfoAddon {
             } else if (container.getAsString().equalsIgnoreCase("date")) {
                 container.next();
                 String[] dates = container.getAsString().split("/");
-                if (dates.length == 2 && ParserUtils.isDecimalNumber(dates[0]) && ParserUtils.isDecimalNumber(dates[1])) {
+                if (dates.length == 2 && ParserUtils.isNumber(dates[0]) && ParserUtils.isNumber(dates[1])) {
                     String fact = getDateFact(dates[0], dates[1]);
                     String date = fact.substring(0, fact.indexOf(" ", fact.indexOf(" ") + 1));
                     EmbedObject eo = getEmbedObject(date, fact, "Date Fact");

@@ -7,12 +7,10 @@ package colour;
 
 import colour.addon.SearchColour;
 import addon.Addon;
-import colour.addon.RandomColour;
 import container.ContainerSettings;
 import container.TokenAdvancedContainer;
 import dbot.BotCommandTrigger;
 import dbot.Module;
-import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.Event;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -25,12 +23,11 @@ import token.TokenConverter;
 public class Colour extends Module {
 
     public interface ColourAddon {
-        public boolean triggerMessage(IDiscordClient client, MessageReceivedEvent e, TokenAdvancedContainer container);
+        public boolean triggerMessage(MessageReceivedEvent e, TokenAdvancedContainer container);
     }
     
-    public Colour() {
-        add(new RandomColour());
-        add(new SearchColour());
+    public Colour(ContainerSettings containerSettings, TokenConverter tokenConverter, BotCommandTrigger commandTrigger) {
+        super(containerSettings, tokenConverter, commandTrigger, new SearchColour());
     }
     @Override
     public String getFullName() {
@@ -71,24 +68,6 @@ public class Colour extends Module {
     public long getUid() {
         return -9123564l;
     }
-    
-    private final static ContainerSettings settings = ContainerSettings.buildSettings("!");
-    @Override
-    public ContainerSettings getContainerSettings() {
-        return settings;
-    }
-
-    private final static TokenConverter converter = TokenConverter.getDefault();
-    @Override
-    public TokenConverter getTokenConverter() {
-        return converter;
-    }
-
-    private final static BotCommandTrigger trigger = BotCommandTrigger.getDefault(settings);
-    @Override
-    public BotCommandTrigger getCommandTrigger() {
-        return trigger;
-    }
 
     @Override
     public boolean onOtherEvent(Event e) {
@@ -107,7 +86,7 @@ public class Colour extends Module {
             if (addon.hasPermissions(e.getAuthor(), e.getChannel(), e.getGuild())) {
                 
                 ColourAddon ca = (ColourAddon) addon;
-                if (ca.triggerMessage(getBotClient(), e, container)) {
+                if (ca.triggerMessage(e, container)) {
                     return true;
                 }
                 container.reset();

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modules.colour;
+package colour.addon;
 
 import net.bloc97.helpers.Levenshtein;
 
@@ -12,6 +12,67 @@ import net.bloc97.helpers.Levenshtein;
  * @author bowen
  */
 public class ColourDatabase {
+    public static int[] transformToInt() {
+        int[] intDatabaseTemp = new int[database.length];
+        
+        for (int i=0; i<database.length; i++) {
+            intDatabaseTemp[i] = Integer.parseInt(database[i][0], 16);
+        }
+        return intDatabaseTemp;
+    }
+    
+    public static int findClosestColourByInt(int colour) {
+        int targetR = (colour & 0xFF0000) >> 16;
+        int targetG = (colour & 0xFF00) >> 8;
+        int targetB = (colour & 0xFF);
+        
+        int lastIndex = -1;
+        double lastScore = Double.MAX_VALUE;
+        
+        for (int i=0; i<database.length; i++) {
+            
+            int currentColour = intDatabase[i];
+            int r = (currentColour & 0xFF0000) >> 16;
+            int g = (currentColour & 0xFF00) >> 8;
+            int b = (currentColour & 0xFF);
+            
+            double currentScore = distanceScore(targetR, targetG, targetB, r, g, b);
+            if (currentScore < lastScore) {
+                lastScore = currentScore;
+                lastIndex = i;
+            }
+            
+        }
+        return lastIndex;
+    }
+    
+    public static int findClosestColourByName(String name) {
+        name = name.toLowerCase();
+        int lastScore = Integer.MAX_VALUE;
+        int lastIndex = -1;
+        for (int i=0; i<database.length; i++) {
+            int currentScore = Levenshtein.subwordDistance(database[i][1].toLowerCase(), name);
+            if (currentScore < lastScore) {
+                lastScore = currentScore;
+                lastIndex = i;
+            }
+        }
+        return lastIndex;
+    }
+    
+    public static double distanceScore(int targetR, int targetG, int targetB, int r, int g, int b) {
+        int diffR = targetR - r; //2nd Sensitive
+        int diffG = targetG - g; //Humans are Most sensitive to Green light
+        int diffB = targetB - b; //Least sensitive
+        return Math.abs(diffR * 1.1) + Math.abs(diffG * 1.4) + Math.abs(diffB);
+    }
+    public static double distanceScoreAbsolute(int targetR, int targetG, int targetB, int r, int g, int b) {
+        int diffR = targetR - r; //2nd Sensitive
+        int diffG = targetG - g; //Humans are Most sensitive to Green light
+        int diffB = targetB - b; //Least sensitive
+        return Math.abs(diffR) + Math.abs(diffG) + Math.abs(diffB);
+    }
+    
     public static String[][] database = new String[][] {
         {"000000", "Black"},
         {"000080", "Navy Blue"},
@@ -1583,65 +1644,5 @@ public class ColourDatabase {
     
     public static int[] intDatabase = transformToInt();
     
-    public static int[] transformToInt() {
-        int[] intDatabaseTemp = new int[database.length];
-        
-        for (int i=0; i<database.length; i++) {
-            intDatabaseTemp[i] = Integer.parseInt(database[i][0], 16);
-        }
-        return intDatabaseTemp;
-    }
-    
-    public static int findClosestColourByInt(int colour) {
-        int targetR = (colour & 0xFF0000) >> 16;
-        int targetG = (colour & 0xFF00) >> 8;
-        int targetB = (colour & 0xFF);
-        
-        int lastIndex = -1;
-        double lastScore = Double.MAX_VALUE;
-        
-        for (int i=0; i<database.length; i++) {
-            
-            int currentColour = intDatabase[i];
-            int r = (currentColour & 0xFF0000) >> 16;
-            int g = (currentColour & 0xFF00) >> 8;
-            int b = (currentColour & 0xFF);
-            
-            double currentScore = distanceScore(targetR, targetG, targetB, r, g, b);
-            if (currentScore < lastScore) {
-                lastScore = currentScore;
-                lastIndex = i;
-            }
-            
-        }
-        return lastIndex;
-    }
-    
-    public static int findClosestColourByName(String name) {
-        name = name.toLowerCase();
-        int lastScore = Integer.MAX_VALUE;
-        int lastIndex = -1;
-        for (int i=0; i<database.length; i++) {
-            int currentScore = Levenshtein.subwordDistance(database[i][1].toLowerCase(), name);
-            if (currentScore < lastScore) {
-                lastScore = currentScore;
-                lastIndex = i;
-            }
-        }
-        return lastIndex;
-    }
-    
-    public static double distanceScore(int targetR, int targetG, int targetB, int r, int g, int b) {
-        int diffR = targetR - r; //2nd Sensitive
-        int diffG = targetG - g; //Humans are Most sensitive to Green light
-        int diffB = targetB - b; //Least sensitive
-        return Math.abs(diffR * 1.2) + Math.abs(diffG * 1.5) + Math.abs(diffB);
-    }
-    public static double distanceScoreAbsolute(int targetR, int targetG, int targetB, int r, int g, int b) {
-        int diffR = targetR - r; //2nd Sensitive
-        int diffG = targetG - g; //Humans are Most sensitive to Green light
-        int diffB = targetB - b; //Least sensitive
-        return Math.abs(diffR) + Math.abs(diffG) + Math.abs(diffB);
-    }
     
 }

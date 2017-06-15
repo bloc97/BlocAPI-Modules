@@ -7,6 +7,7 @@ package colour;
 
 import colour.addon.SearchColour;
 import addon.Addon;
+import colour.Colour.ColourAddon;
 import container.ContainerSettings;
 import container.TokenAdvancedContainer;
 import dbot.BotCommandTrigger;
@@ -20,9 +21,9 @@ import token.TokenConverter;
  *
  * @author bowen
  */
-public class Colour extends Module {
+public class Colour extends Module<ColourAddon> {
 
-    public interface ColourAddon {
+    public interface ColourAddon extends Addon {
         public boolean triggerMessage(MessageReceivedEvent e, TokenAdvancedContainer container);
     }
     
@@ -80,19 +81,8 @@ public class Colour extends Module {
     }
 
     @Override
-    public boolean onMessage(MessageReceivedEvent e, TokenAdvancedContainer container) {
-        
-        for (Addon addon : getAddons()) {
-            if (addon.hasPermissions(e.getAuthor(), e.getChannel(), e.getGuild())) {
-                
-                ColourAddon ca = (ColourAddon) addon;
-                if (ca.triggerMessage(e, container)) {
-                    return true;
-                }
-                container.reset();
-            }
-        }
-        return false;
+    public boolean onMessageForEachAddon(ColourAddon addon, MessageReceivedEvent e, TokenAdvancedContainer container) {
+        return addon.triggerMessage(e, container);
     }
     
 }

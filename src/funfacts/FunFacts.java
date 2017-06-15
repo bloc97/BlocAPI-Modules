@@ -10,6 +10,7 @@ import container.ContainerSettings;
 import container.TokenAdvancedContainer;
 import dbot.BotCommandTrigger;
 import dbot.Module;
+import funfacts.FunFacts.RandomInfoAddon;
 import funfacts.addon.RandomFact;
 import modules.Help;
 import sx.blah.discord.api.events.Event;
@@ -21,9 +22,9 @@ import token.TokenConverter;
  *
  * @author bowen
  */
-public class FunFacts extends Module {
+public class FunFacts extends Module<RandomInfoAddon> {
 
-    public interface RandomInfoAddon {
+    public interface RandomInfoAddon extends Addon {
         public boolean trigger(MessageReceivedEvent e, TokenAdvancedContainer container);
     }
     
@@ -82,19 +83,8 @@ public class FunFacts extends Module {
     }
 
     @Override
-    public boolean onMessage(MessageReceivedEvent e, TokenAdvancedContainer container) {
-        
-        for (Addon addon : getAddons()) {
-            if (addon.hasPermissions(e.getAuthor(), e.getChannel(), e.getGuild())) {
-
-                RandomInfoAddon ria = (RandomInfoAddon) addon;
-                if (ria.trigger(e, container)) {
-                    return true;
-                }
-                container.reset();
-            }
-        }
-        return false;
+    public boolean onMessageForEachAddon(RandomInfoAddon addon, MessageReceivedEvent e, TokenAdvancedContainer container) {
+        return addon.trigger(e, container);
     }
     
 }

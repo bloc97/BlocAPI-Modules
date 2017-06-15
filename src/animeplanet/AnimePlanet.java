@@ -6,6 +6,7 @@
 package animeplanet;
 
 import addon.Addon;
+import animeplanet.AnimePlanet.AnimePlanetAddon;
 import animeplanet.addon.AnimeSearch;
 import container.ContainerSettings;
 import container.TokenAdvancedContainer;
@@ -20,9 +21,9 @@ import token.TokenConverter;
  *
  * @author bowen
  */
-public class AnimePlanet extends Module {
+public class AnimePlanet extends Module<AnimePlanetAddon> {
 
-    public interface AnimePlanetAddon {
+    public interface AnimePlanetAddon extends Addon {
         public boolean triggerMessage(MessageReceivedEvent e, TokenAdvancedContainer container);
     }
     
@@ -78,21 +79,10 @@ public class AnimePlanet extends Module {
     public boolean onReady(ReadyEvent e) {
         return false;
     }
-
+    
     @Override
-    public boolean onMessage(MessageReceivedEvent e, TokenAdvancedContainer container) {
-        
-        for (Addon addon : getAddons()) {
-            if (addon.hasPermissions(e.getAuthor(), e.getChannel(), e.getGuild())) {
-                
-                AnimePlanetAddon ca = (AnimePlanetAddon) addon;
-                if (ca.triggerMessage(e, container)) {
-                    return true;
-                }
-                container.reset();
-            }
-        }
-        return false;
+    public boolean onMessageForEachAddon(AnimePlanetAddon addon, MessageReceivedEvent e, TokenAdvancedContainer container) {
+        return addon.triggerMessage(e, container);
     }
     
 }

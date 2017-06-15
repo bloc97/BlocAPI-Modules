@@ -27,18 +27,18 @@ import token.NumberToken;
  *
  * @author bowen
  */
-public class RandomFact implements Addon, RandomInfoAddon {
-
+public class RandomFact implements RandomInfoAddon {
+    
     @Override
     public String getName() {
         return "Random Facts";
     }
-
+    
     @Override
     public String getDescription() {
         return "Displays fun facts for users.";
     }
-
+    
     @Override
     public String getFullHelp() {
         return "**!funfact** - *Displays a random fun fact*\n" + 
@@ -55,36 +55,36 @@ public class RandomFact implements Addon, RandomInfoAddon {
                "        date <date> - *Date facts*\n\n" + 
                "*Note: You can replace any value by **random** for a random fun fact.*";
     }
-
+    
     @Override
     public String getShortHelp() {
         return "**!funfact** - *Displays a fun fact*\n" + 
                "**!funfact** <number> - *Displays a fun fact for that number*\n" + 
                "**!funfact** <type> (value) - *Displays a specific type of fun fact, see help page for more info*";
     }
-
+    
     @Override
     public int getColour() {
         return 5563639;
     }
-
+    
     @Override
     public short getUid() {
         return 0;
     }
-
+    
     @Override
     public TokenDetectorContainer getTriggerDetector() {
         return new TokenDetectorContainer(
                 new TokenStringDetector("funfact")
         );
     }
-
+    
     @Override
     public boolean hasPermissions(IUser user, IChannel channel, IGuild guild) {
         return true;
     }
-
+    
     @Override
     public boolean trigger(MessageReceivedEvent e, TokenAdvancedContainer container) {
         if (container.getAsString().equalsIgnoreCase("funfact")) {

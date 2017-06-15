@@ -27,7 +27,7 @@ import sx.blah.discord.util.RequestBuffer;
  *
  * @author bowen
  */
-public class AnimeSearch implements Addon, AnimePlanetAddon {
+public class AnimeSearch implements AnimePlanetAddon {
 
     @Override
     public String getName() {

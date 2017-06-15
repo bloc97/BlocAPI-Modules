@@ -5,22 +5,16 @@
  */
 package audiotest;
 
+import addon.Addon;
 import container.ContainerSettings;
 import container.TokenAdvancedContainer;
 import dbot.BotCommandTrigger;
 import dbot.ModuleEmptyImpl;
 import java.io.File;
 import java.io.IOException;
-import java.nio.IntBuffer;
 import java.util.LinkedList;
 import java.util.List;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import sx.blah.discord.Discord4J;
-import sx.blah.discord.api.internal.Opus;
-import sx.blah.discord.api.internal.OpusUtil;
-import sx.blah.discord.handle.audio.AudioEncodingType;
-import sx.blah.discord.handle.audio.IAudioProcessor;
-import sx.blah.discord.handle.audio.IAudioProvider;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.RequestBuffer;
@@ -49,7 +43,7 @@ public class AudioTest extends ModuleEmptyImpl {
 
     @Override
     public long getUid() {
-        return 0;
+        return -419738612l;
     }
     
     private List<CustomOpusEncoder> coeList = new LinkedList();
@@ -62,7 +56,7 @@ public class AudioTest extends ModuleEmptyImpl {
             int kbps = 64;
             
             container.next();
-            if (container.getAsNumber() > 10 && container.getAsNumber() < 196) {
+            if (container.getAsNumber() > 6 && container.getAsNumber() < 196) {
                 kbps = container.getAsNumber().intValue();
             }
             
@@ -111,5 +105,10 @@ public class AudioTest extends ModuleEmptyImpl {
         }
         return false;
         
+    }
+
+    @Override
+    public boolean onMessageForEachAddon(Addon addon, MessageReceivedEvent e, TokenAdvancedContainer container) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

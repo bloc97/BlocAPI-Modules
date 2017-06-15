@@ -31,7 +31,7 @@ import token.Token;
  *
  * @author bowen
  */
-public class SearchColour implements Addon, ColourAddon {
+public class SearchColour implements ColourAddon {
     
     @Override
     public String getName() {

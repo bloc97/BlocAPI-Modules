@@ -42,24 +42,24 @@ public class CustomOpusEncoder implements IAudioProcessor {
 
     @Override
     public AudioEncodingType getAudioEncodingType() {
-        return provider.getAudioEncodingType().OPUS;
+        return AudioEncodingType.OPUS;
     }
 
     @Override
     public byte[] provide() {
-    if (isReady() && !Discord4J.audioDisabled.get()) {
+        if (isReady() && !Discord4J.audioDisabled.get()) {
             AudioEncodingType type = provider.getAudioEncodingType();
             int channels = provider.getChannels();
             byte[] data = provider.provide();
             if (data == null)
-                    data = new byte[0];
+                data = new byte[0];
             if (type != AudioEncodingType.OPUS) {
-                    data = CustomOpusUtil.encode(channels == 1 ? monoEncoder : stereoEncoder, data);
+                data = CustomOpusUtil.encode(channels == 1 ? monoEncoder : stereoEncoder, data);
             }
 
             return data;
-    }
-    return new byte[0];
+        }
+        return new byte[0];
     }
     
     private final PointerByReference monoEncoder = newEncoder(1);

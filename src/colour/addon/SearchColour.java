@@ -73,19 +73,7 @@ public class SearchColour implements Addon, ColourAddon {
     @Override
     public TokenDetectorContainer getTriggerDetector() {
         return new TokenDetectorContainer(
-                new TokenStringDetector("colour"),
-                new TokenDetector() {
-                    @Override
-                    public boolean check(Token token) {
-                        String colourToken = token.getString();
-                        if (colourToken.startsWith("#") && (colourToken.length() == 4 || colourToken.length() == 7)) {
-                            return true;
-                        } else if (colourToken.equalsIgnoreCase("random")) {
-                            return false;
-                        }
-                        return true;
-                    }
-                }
+                new TokenStringDetector("colour")
         );
     }
 

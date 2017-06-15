@@ -5,11 +5,11 @@
  */
 package audiotest;
 
-import static audiotest.CustomOpusUtil.OPUS_SAMPLE_RATE;
 import com.sun.jna.ptr.PointerByReference;
 import java.nio.IntBuffer;
 import sx.blah.discord.Discord4J;
 import sx.blah.discord.api.internal.Opus;
+import sx.blah.discord.api.internal.OpusUtil;
 import sx.blah.discord.handle.audio.AudioEncodingType;
 import sx.blah.discord.handle.audio.IAudioProcessor;
 import sx.blah.discord.handle.audio.IAudioProvider;
@@ -54,7 +54,7 @@ public class CustomOpusEncoder implements IAudioProcessor {
             if (data == null)
                 data = new byte[0];
             if (type != AudioEncodingType.OPUS) {
-                data = CustomOpusUtil.encode(channels == 1 ? monoEncoder : stereoEncoder, data);
+                data = OpusUtil.encode(channels == 1 ? monoEncoder : stereoEncoder, data);
             }
 
             return data;
@@ -71,11 +71,11 @@ public class CustomOpusEncoder implements IAudioProcessor {
     }
     
     public static PointerByReference newEncoder(int channels) {
-        return Opus.INSTANCE.opus_encoder_create(OPUS_SAMPLE_RATE, channels, Opus.OPUS_APPLICATION_AUDIO, IntBuffer.allocate(4));
+        return Opus.INSTANCE.opus_encoder_create(OpusUtil.OPUS_SAMPLE_RATE, channels, Opus.OPUS_APPLICATION_AUDIO, IntBuffer.allocate(4));
     }
 
     public static PointerByReference newDecoder(int channels) {
-        return Opus.INSTANCE.opus_decoder_create(OPUS_SAMPLE_RATE, channels, IntBuffer.allocate(4));
+        return Opus.INSTANCE.opus_decoder_create(OpusUtil.OPUS_SAMPLE_RATE, channels, IntBuffer.allocate(4));
     }   
     
 }

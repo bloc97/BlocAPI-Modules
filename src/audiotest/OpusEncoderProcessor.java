@@ -19,25 +19,32 @@ import sx.blah.discord.handle.audio.impl.DefaultProvider;
  *
  * @author bowen
  */
-public class CustomOpusEncoder implements IAudioProcessor {
+public final class OpusEncoderProcessor implements IAudioProcessor {
+    
     private IAudioProvider provider;
+    private boolean isReady;
 
-    public CustomOpusEncoder() {
+    public OpusEncoderProcessor() {
         provider = new DefaultProvider();
     }
-    public CustomOpusEncoder(IAudioProvider provider) {
-        this.provider = provider;
+    
+    public OpusEncoderProcessor(IAudioProvider provider) {
+        setProvider(provider);
     }
     
     @Override
     public boolean setProvider(IAudioProvider provider) {
-        this.provider = provider;
-        return true;
+        if (!AudioEncodingType.OPUS.equals(provider.getAudioEncodingType())) {
+            this.provider = provider;
+            this.isReady = true;
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean isReady() {
-        return provider.isReady();
+        return provider.isReady() && isReady;
     }
 
     @Override
@@ -48,16 +55,13 @@ public class CustomOpusEncoder implements IAudioProcessor {
     @Override
     public byte[] provide() {
         if (isReady() && !Discord4J.audioDisabled.get()) {
-            AudioEncodingType type = provider.getAudioEncodingType();
             int channels = provider.getChannels();
             byte[] data = provider.provide();
             if (data == null)
                 data = new byte[0];
-            if (type != AudioEncodingType.OPUS) {
-                data = OpusUtil.encode(channels == 1 ? monoEncoder : stereoEncoder, data);
-            }
-
-            return data;
+            
+            return provider.getAudioEncodingType().equals(AudioEncodingType.OPUS) ? 
+                data : OpusUtil.encode(channels == 1 ? monoEncoder : stereoEncoder, data);
         }
         return new byte[0];
     }

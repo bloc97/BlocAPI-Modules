@@ -5,27 +5,22 @@
  */
 package colour.addon;
 
-import addon.Addon;
 import helpers.ColourUtils;
 import helpers.ParserUtils;
 import helpers.RandomUtils;
 import java.util.Map.Entry;
 import colour.Colour.ColourAddon;
 import container.TokenAdvancedContainer;
-import container.detector.TokenDetector;
 import container.detector.TokenDetectorContainer;
 import container.detector.TokenStringDetector;
-import colour.addon.ColourDatabase;
 import helpers.NumberUtils;
 import modules.help.Help;
-import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.RequestBuffer;
-import token.Token;
 
 /**
  *

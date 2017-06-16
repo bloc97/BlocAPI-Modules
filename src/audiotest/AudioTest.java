@@ -12,10 +12,10 @@ import dbot.BotCommandTrigger;
 import dbot.ModuleEmptyImpl;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.audio.AudioPlayer;
@@ -26,7 +26,7 @@ import token.TokenConverter;
  * @author bowen
  */
 public class AudioTest extends ModuleEmptyImpl {
-
+    
     public AudioTest(ContainerSettings containerSettings, TokenConverter tokenConverter, BotCommandTrigger commandTrigger) {
         super(containerSettings, tokenConverter, commandTrigger);
     }
@@ -46,8 +46,6 @@ public class AudioTest extends ModuleEmptyImpl {
         return -419738612l;
     }
     
-    private List<CustomOpusEncoder> coeList = new LinkedList();
-    
     @Override
     public boolean onMessage(MessageReceivedEvent e, TokenAdvancedContainer container) {
         
@@ -59,7 +57,6 @@ public class AudioTest extends ModuleEmptyImpl {
             if (container.getAsNumber() > 6 && container.getAsNumber() < 196) {
                 kbps = container.getAsNumber().intValue();
             }
-            
             IVoiceChannel voiceChannel = e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel();
             
             if (voiceChannel == null) {
@@ -74,7 +71,7 @@ public class AudioTest extends ModuleEmptyImpl {
             
             AudioPlayer player = AudioPlayer.getAudioPlayerForGuild(e.getGuild());
             
-            CustomOpusEncoder coe = new CustomOpusEncoder();
+            OpusEncoderProcessor coe = new OpusEncoderProcessor();
             
             player.addProcessor(coe);
             coe.setBitRate(kbps);

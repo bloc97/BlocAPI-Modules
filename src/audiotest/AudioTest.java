@@ -6,16 +6,17 @@
 package audiotest;
 
 import addon.Addon;
+import audiolib.OpusEncoder;
+import audiolib.OpusEncoderProperties;
+import audiolib.OpusEncoderProviderFactory;
 import container.ContainerSettings;
 import container.TokenAdvancedContainer;
 import dbot.BotCommandTrigger;
 import dbot.ModuleEmptyImpl;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IGuild;
 import sx.blah.discord.handle.obj.IVoiceChannel;
 import sx.blah.discord.util.RequestBuffer;
 import sx.blah.discord.util.audio.AudioPlayer;
@@ -26,6 +27,8 @@ import token.TokenConverter;
  * @author bowen
  */
 public class AudioTest extends ModuleEmptyImpl {
+    
+    private final OpusEncoder encoder = new OpusEncoder(OpusEncoderProperties.Application.AUDIO);
     
     public AudioTest(ContainerSettings containerSettings, TokenConverter tokenConverter, BotCommandTrigger commandTrigger) {
         super(containerSettings, tokenConverter, commandTrigger);
@@ -52,10 +55,11 @@ public class AudioTest extends ModuleEmptyImpl {
         if (container.getAsString().equalsIgnoreCase("play")) {
             
             int kbps = 64;
+            int index = 1;
             
             container.next();
-            if (container.getAsNumber() > 6 && container.getAsNumber() < 196) {
-                kbps = container.getAsNumber().intValue();
+            if (container.getAsNumber() > 0 && container.getAsNumber() < 7) {
+                index = container.getAsNumber().intValue() - 1;
             }
             IVoiceChannel voiceChannel = e.getClient().getOurUser().getVoiceStateForGuild(e.getGuild()).getChannel();
             
@@ -71,17 +75,17 @@ public class AudioTest extends ModuleEmptyImpl {
             
             AudioPlayer player = AudioPlayer.getAudioPlayerForGuild(e.getGuild());
             
-            OpusEncoderProcessor coe = new OpusEncoderProcessor();
+            //OpusEncoderProcessor coe = new OpusEncoderProcessor();
             
-            player.addProcessor(coe);
-            coe.setBitRate(kbps);
+            //player.addProcessor(coe);
+            //coe.setBitRate(kbps);
             
             File[] musicFiles = new File("music").listFiles();
             
             player.clear();
             
             try {
-                player.queue(musicFiles[0]);
+                player.queue(OpusEncoderProviderFactory.getProvider(encoder, musicFiles[index]));
             } catch (IOException | UnsupportedAudioFileException ex) {
                 System.out.println(ex);
             }

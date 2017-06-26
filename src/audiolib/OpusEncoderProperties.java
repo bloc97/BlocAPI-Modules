@@ -5,7 +5,8 @@
  */
 package audiolib;
 
-import sx.blah.discord.api.internal.Opus;
+import tomp2p.opuswrapper.Opus;
+
 
 /**
  *

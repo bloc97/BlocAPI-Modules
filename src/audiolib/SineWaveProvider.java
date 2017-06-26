@@ -5,24 +5,23 @@
  */
 package audiolib;
 
-import sx.blah.discord.handle.audio.AudioEncodingType;
-import sx.blah.discord.handle.audio.IAudioProvider;
+import net.dv8tion.jda.core.audio.AudioSendHandler;
 
 /**
  *
  * @author bowen
  */
-public class SineWaveProvider implements IAudioProvider {
+public class SineWaveProvider implements AudioSendHandler {
 
     public int ix = 0;
     
     @Override
-    public boolean isReady() {
+    public boolean canProvide() {
         return true;
     }
 
     @Override
-    public byte[] provide() {
+    public byte[] provide20MsAudio() {
         byte[] sine = new byte[(int)(48000*0.02*2*2)];
         for (int i=0; i<sine.length; i++) {
             if (ix % 400 < 200) {
@@ -35,14 +34,10 @@ public class SineWaveProvider implements IAudioProvider {
         return sine;
     }
 
-    @Override
-    public int getChannels() {
-        return 2;
-    }
 
     @Override
-    public AudioEncodingType getAudioEncodingType() {
-        return AudioEncodingType.PCM;
+    public boolean isOpus() {
+        return false;
     }
     
 }

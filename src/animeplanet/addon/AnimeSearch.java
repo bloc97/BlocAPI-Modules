@@ -13,15 +13,12 @@ import container.TokenAdvancedContainer;
 import container.detector.TokenDetectorContainer;
 import container.detector.TokenStringDetector;
 import helpers.ParserUtils;
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.api.internal.json.objects.EmbedObject.*;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IGuild;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.RequestBuffer;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 /**
  *
@@ -67,7 +64,7 @@ public class AnimeSearch implements AnimePlanetAddon {
     }
 
     @Override
-    public boolean hasPermissions(IUser user, IChannel channel, IGuild guild) {
+    public boolean hasPermissions(MessageReceivedEvent e) {
         return true;
     }
 
@@ -81,36 +78,30 @@ public class AnimeSearch implements AnimePlanetAddon {
                 AnimePage anime = Searchers.getAnimeByName(name);
                 
                 if (anime.getId() == -1) {
-                    RequestBuffer.request(() -> {
-                        return e.getMessage().reply("Sorry, could not find the anime \"" + name + "\"");
-                    }).get();
+                    e.getChannel().sendMessage("Sorry, could not find the anime \"" + name + "\"").queue();
                     return false;
                 }
                 
-                EmbedObject eo = getAnimeEmbed(anime);
+                MessageEmbed eb = getAnimeEmbed(anime);
+                e.getChannel().sendMessage(eb);
                 
-                RequestBuffer.request(() -> {
-                    return e.getChannel().sendMessage(eo);
-                }).get();
             } catch (Exception ex) {
-                RequestBuffer.request(() -> {
-                    return e.getMessage().reply("Sorry, could not find the anime \"" + name + "\"");
-                }).get();
+                e.getChannel().sendMessage("Sorry, could not find the anime \"" + name + "\"").queue();
             }
             return true;
         }
         return false;
     }
     
-    public static EmbedObject getAnimeEmbed(AnimePage anime) {
-        EmbedObject eo = new EmbedObject();
+    public static MessageEmbed getAnimeEmbed(AnimePage anime) {
         
-        eo.color = 0;
-        eo.author = new AuthorObject(anime.getTitle(), anime.getUrl(),null, null);
-        eo.description = (anime.hasAltTitle() ? "*" + anime.getAltTitle() + "*\n" : "") +
-                anime.getType() + " (" + anime.getEpisodes() + " " + (anime.getEpisodes().equalsIgnoreCase("1") ? "ep" : "eps") + ")";
+        EmbedBuilder eb = new EmbedBuilder();
         
-        List<EmbedFieldObject> efo = new LinkedList();
+        eb.setColor(Color.BLACK);
+        eb.setAuthor(anime.getTitle(), anime.getUrl(), null);
+        eb.setDescription((anime.hasAltTitle() ? "*" + anime.getAltTitle() + "*\n" : "") +
+                anime.getType() + " (" + anime.getEpisodes() + " " + (anime.getEpisodes().equalsIgnoreCase("1") ? "ep" : "eps") + ")");
+        
         List<String> tags = anime.getTags();
         String tagString = tags.get(0);
         for (int i=1; i<tags.size(); i++) {
@@ -122,12 +113,11 @@ public class AnimeSearch implements AnimePlanetAddon {
             description = description.substring(0, anime.getDescription().indexOf('.', 140)) + "...";
         }
         
-        efo.add(new EmbedFieldObject("Synopsis", description, true));
-        efo.add(new EmbedFieldObject("Tags", tagString, true));
-        efo.add(new EmbedFieldObject("\uFEFF", ":star: " + anime.getRating(), false));
-        eo.thumbnail = new ThumbnailObject(anime.getThumbnailUrl(), null, 180, 180);
-        eo.fields = efo.toArray(new EmbedFieldObject[0]);
-        eo.footer = new FooterObject("Rank #" + anime.getRank(), null, null);
-        return eo;
+        eb.addField("Synopsis", description, true);
+        eb.addField("Tags", tagString, true);
+        eb.addField("\uFEFF", ":star: " + anime.getRating(), false);
+        eb.setThumbnail(anime.getThumbnailUrl());
+        eb.setFooter("Rank #" + anime.getRank(), null);
+        return eb.build();
     }
 }

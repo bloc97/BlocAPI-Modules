@@ -3,9 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/bowen/Documents/GitHub/Discord-BlocAPI-Modules/src/animeplanet/addon/AnimeSearch.java</file>
-            <file>file:/C:/Users/bowen/Documents/GitHub/Discord-BlocAPI-Modules/src/audiotest/CustomOpusEncoder.java</file>
+            <file>file:/C:/Users/bowen/Documents/GitHub/Discord-BlocAPI-Modules/src/audiolib/OpusEncoderProperties.java</file>
+            <file>file:/C:/Users/bowen/Documents/GitHub/Discord-BlocAPI-Modules/src/toolbox/addon/Purge.java</file>
+            <file>file:/C:/Users/bowen/Documents/GitHub/Discord-BlocAPI-Modules/src/audiolib/SineWaveProvider.java</file>
+            <file>file:/C:/Users/bowen/Documents/GitHub/Discord-BlocAPI-Modules/src/audiolib/OpusEncoder.java</file>
             <file>file:/C:/Users/bowen/Documents/GitHub/Discord-BlocAPI-Modules/src/audiotest/AudioTest.java</file>
+            <file>file:/C:/Users/bowen/Documents/GitHub/Discord-BlocAPI-Modules/src/audiolib/OpusEncoderProviderFactory.java</file>
+            <file>file:/C:/Users/bowen/Documents/GitHub/Discord-BlocAPI-Modules/src/toolbox/ToolBox.java</file>
+            <file>file:/C:/Users/bowen/Documents/GitHub/Discord-BlocAPI-Modules/src/audiolib/OpusCompatiblePCMStream.java</file>
+            <file>file:/C:/Users/bowen/Documents/GitHub/Discord-BlocAPI-Modules/src/audiolib/PCMUtils.java</file>
         </group>
     </open-files>
 </project-private>

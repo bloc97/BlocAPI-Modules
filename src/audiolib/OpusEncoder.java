@@ -7,16 +7,11 @@ package audiolib;
 
 import com.sun.jna.ptr.PointerByReference;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.util.LinkedList;
 import java.util.List;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import sx.blah.discord.api.internal.Opus;
-import sx.blah.discord.api.internal.OpusUtil;
+import tomp2p.opuswrapper.Opus;
 
 /**
  *
@@ -93,8 +88,8 @@ public class OpusEncoder {
         return isReady;
     }
     
-    private PointerByReference getEncoder(float sampleRate, int channels) {
-        int sampleRateInt = (int) sampleRate;
+    public PointerByReference getEncoder(float supportedSampleRate, int channels) {
+        int sampleRateInt = (int) supportedSampleRate;
         if (channels == 2) {
             switch (sampleRateInt) {
                 case 48000:
@@ -108,7 +103,7 @@ public class OpusEncoder {
                 case 8000:
                     return encoder_STEREO8;
             }
-        } else {
+        } else if (channels == 1) {
             switch (sampleRateInt) {
                 case 48000:
                     return encoder_MONO48;
@@ -125,12 +120,11 @@ public class OpusEncoder {
         return encoder_STEREO48;
     }
     
-    public byte[] encode(short[] pcm16, int frameSize, float supportedSampleRate, int channels) {
-        if (!isReady()) return new byte[frameSize];
+    public static byte[] encode(PointerByReference encoder, short[] pcm16, int frameSize) {
+        
         ShortBuffer nonEncodedBuffer = ShortBuffer.wrap(pcm16);
         ByteBuffer encodedBuffer = ByteBuffer.allocate(4096);
         
-        PointerByReference encoder = getEncoder(supportedSampleRate, channels);
         
         int result = Opus.INSTANCE.opus_encode(encoder, nonEncodedBuffer, frameSize, encodedBuffer, encodedBuffer.capacity());
         
@@ -142,11 +136,8 @@ public class OpusEncoder {
         encodedBuffer.get(encoded);
         return encoded;
     }
-    
-    public byte[] encodeFloat(float[] pcmf, int frameSize, float supportedSampleRate, int channels) {
+    public static byte[] encodeFloat(PointerByReference encoder, float[] pcmf, int frameSize) {
         ByteBuffer encodedBuffer = ByteBuffer.allocate(4096);
-
-        PointerByReference encoder = getEncoder(supportedSampleRate, channels);
         
         int result = Opus.INSTANCE.opus_encode_float(encoder, pcmf, frameSize, encodedBuffer, encodedBuffer.capacity());
         
@@ -157,6 +148,16 @@ public class OpusEncoder {
         byte[] encoded = new byte[result];
         encodedBuffer.get(encoded);
         return encoded;
+    }
+    
+    public byte[] encode(short[] pcm16, int frameSize, float supportedSampleRate, int channels) {
+        if (!isReady()) return new byte[frameSize];
+        return encode(getEncoder(supportedSampleRate, channels), pcm16, frameSize);
+    }
+    
+    public byte[] encodeFloat(float[] pcmf, int frameSize, float supportedSampleRate, int channels) {
+        ByteBuffer encodedBuffer = ByteBuffer.allocate(4096);
+        return encodeFloat(getEncoder(supportedSampleRate, channels), pcmf, frameSize);
     }
     
     public OpusEncoderProperties.Application getApplication() {

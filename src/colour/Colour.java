@@ -12,9 +12,9 @@ import container.ContainerSettings;
 import container.TokenAdvancedContainer;
 import dbot.BotCommandTrigger;
 import dbot.Module;
-import sx.blah.discord.api.events.Event;
-import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.events.Event;
+import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import token.TokenConverter;
 
 /**
